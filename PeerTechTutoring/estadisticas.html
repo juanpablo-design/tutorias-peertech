@@ -166,6 +166,19 @@
       text-align: center;
     }
     
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray);
+      grid-column: 1 / -1;
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--light-gray);
+    }
+    
     footer {
       text-align: center;
       padding: 20px;
@@ -192,45 +205,8 @@
     <section class="card">
       <h2><i class="fas fa-chart-bar"></i> Estadísticas de la Plataforma</h2>
       
-      <div class="stats-container">
-        <div class="stat-card">
-          <div class="stat-number" id="total-registros">0</div>
-          <div class="stat-label">Total Registros</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="total-tutores">0</div>
-          <div class="stat-label">Tutores Registrados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="total-estudiantes">0</div>
-          <div class="stat-label">Estudiantes Activos</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number" id="promedio-calificacion">0.0</div>
-          <div class="stat-label">Calificación Promedio</div>
-        </div>
-      </div>
-      
-      <div class="charts-container">
-        <div class="chart-card">
-          <h3>Distribución de Roles</h3>
-          <canvas id="rolesChart"></canvas>
-        </div>
-        
-        <div class="chart-card">
-          <h3>Materias Más Populares</h3>
-          <canvas id="materiasChart"></canvas>
-        </div>
-        
-        <div class="chart-card">
-          <h3>Disponibilidad de Tutores</h3>
-          <canvas id="disponibilidadChart"></canvas>
-        </div>
-        
-        <div class="chart-card">
-          <h3>Distribución por Semestre</h3>
-          <canvas id="semestresChart"></canvas>
-        </div>
+      <div id="contenido-estadisticas">
+        <!-- El contenido se cargará dinámicamente -->
       </div>
     </section>
   </div>
@@ -243,11 +219,25 @@
   </footer>
 
   <script>
-    // Función para cargar y mostrar estadísticas
     function cargarEstadisticas() {
       const registros = JSON.parse(localStorage.getItem('tutoriasRegistros')) || [];
+      const contenedor = document.getElementById('contenido-estadisticas');
       
-      // Calcular estadísticas básicas
+      if (registros.length === 0) {
+        contenedor.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-chart-bar"></i>
+            <h3>No hay datos para mostrar</h3>
+            <p>Regístrate para comenzar a generar estadísticas</p>
+            <a href="registro.html" class="btn" style="margin-top: 15px;">
+              <i class="fas fa-user-plus"></i> Registrarse
+            </a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calcular estadísticas REALES
       const totalRegistros = registros.length;
       const totalTutores = registros.filter(r => r.rol === 'tutor' || r.rol === 'ambos').length;
       const totalEstudiantes = registros.filter(r => r.rol === 'estudiante' || r.rol === 'ambos').length;
@@ -259,13 +249,7 @@
         ? (calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length).toFixed(1)
         : '0.0';
       
-      // Actualizar estadísticas básicas
-      document.getElementById('total-registros').textContent = totalRegistros;
-      document.getElementById('total-tutores').textContent = totalTutores;
-      document.getElementById('total-estudiantes').textContent = totalEstudiantes;
-      document.getElementById('promedio-calificacion').textContent = promedioCalificacion;
-      
-      // Calcular datos para gráficos
+      // Datos para gráficos
       const rolesData = {
         'Tutor': registros.filter(r => r.rol === 'tutor').length,
         'Estudiante': registros.filter(r => r.rol === 'estudiante').length,
@@ -274,18 +258,63 @@
       
       const materiasData = {};
       registros.forEach(r => {
-        materiasData[r.materia] = (materiasData[r.materia] || 0) + 1;
+        const materia = r.materia.charAt(0).toUpperCase() + r.materia.slice(1);
+        materiasData[materia] = (materiasData[materia] || 0) + 1;
       });
       
       const disponibilidadData = {};
       registros.forEach(r => {
-        disponibilidadData[r.disponibilidad] = (disponibilidadData[r.disponibilidad] || 0) + 1;
+        const disp = obtenerTextoDisponibilidad(r.disponibilidad);
+        disponibilidadData[disp] = (disponibilidadData[disp] || 0) + 1;
       });
       
       const semestresData = {};
       registros.forEach(r => {
         semestresData[r.semestre] = (semestresData[r.semestre] || 0) + 1;
       });
+      
+      contenedor.innerHTML = `
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-number">${totalRegistros}</div>
+            <div class="stat-label">Total Registrados</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalTutores}</div>
+            <div class="stat-label">Tutores Activos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalEstudiantes}</div>
+            <div class="stat-label">Estudiantes Activos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${promedioCalificacion}</div>
+            <div class="stat-label">Calificación Promedio</div>
+          </div>
+        </div>
+        
+        <div class="charts-container">
+          <div class="chart-card">
+            <h3>Distribución de Roles</h3>
+            <canvas id="rolesChart"></canvas>
+          </div>
+          
+          <div class="chart-card">
+            <h3>Materias Más Populares</h3>
+            <canvas id="materiasChart"></canvas>
+          </div>
+          
+          <div class="chart-card">
+            <h3>Disponibilidad</h3>
+            <canvas id="disponibilidadChart"></canvas>
+          </div>
+          
+          <div class="chart-card">
+            <h3>Distribución por Semestre</h3>
+            <canvas id="semestresChart"></canvas>
+          </div>
+        </div>
+      `;
       
       // Crear gráficos
       crearGraficoRoles(rolesData);
@@ -294,7 +323,17 @@
       crearGraficoSemestres(semestresData);
     }
     
-    // Función para crear gráfico de roles
+    function obtenerTextoDisponibilidad(disponibilidad) {
+      const textos = {
+        'manana': 'Mañanas',
+        'tarde': 'Tardes',
+        'noche': 'Noches',
+        'fin-semana': 'Fines de semana',
+        'flexible': 'Flexible'
+      };
+      return textos[disponibilidad] || disponibilidad;
+    }
+    
     function crearGraficoRoles(data) {
       const ctx = document.getElementById('rolesChart').getContext('2d');
       new Chart(ctx, {
@@ -317,13 +356,12 @@
       });
     }
     
-    // Función para crear gráfico de materias
     function crearGraficoMaterias(data) {
       const ctx = document.getElementById('materiasChart').getContext('2d');
       new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: Object.keys(data).map(m => m.charAt(0).toUpperCase() + m.slice(1)),
+          labels: Object.keys(data),
           datasets: [{
             label: 'Cantidad',
             data: Object.values(data),
@@ -341,22 +379,12 @@
       });
     }
     
-    // Función para crear gráfico de disponibilidad
     function crearGraficoDisponibilidad(data) {
       const ctx = document.getElementById('disponibilidadChart').getContext('2d');
       new Chart(ctx, {
         type: 'pie',
         data: {
-          labels: Object.keys(data).map(d => {
-            const textos = {
-              'manana': 'Mañanas',
-              'tarde': 'Tardes',
-              'noche': 'Noches',
-              'fin-semana': 'Fines de semana',
-              'flexible': 'Flexible'
-            };
-            return textos[d] || d;
-          }),
+          labels: Object.keys(data),
           datasets: [{
             data: Object.values(data),
             backgroundColor: ['#4361ee', '#4cc9f0', '#3a0ca3', '#7209b7', '#f72585']
@@ -373,7 +401,6 @@
       });
     }
     
-    // Función para crear gráfico de semestres
     function crearGraficoSemestres(data) {
       const ctx = document.getElementById('semestresChart').getContext('2d');
       
@@ -406,7 +433,6 @@
       });
     }
     
-    // Cargar estadísticas al iniciar la página
     document.addEventListener('DOMContentLoaded', cargarEstadisticas);
   </script>
 </body>

@@ -80,6 +80,7 @@
       font-size: 2.5rem;
       margin-bottom: 20px;
       color: var(--secondary);
+      animation: fadeInUp 1s ease-out;
     }
     
     .hero p {
@@ -87,79 +88,211 @@
       max-width: 800px;
       margin: 0 auto 30px;
       color: var(--gray);
+      animation: fadeInUp 1s ease-out 0.2s both;
     }
     
     .btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       background: var(--primary);
       color: white;
-      padding: 15px 30px;
-      border-radius: 30px;
+      padding: 18px 35px;
+      border-radius: 50px;
       text-decoration: none;
       font-weight: 600;
-      transition: all 0.3s;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-      margin: 10px;
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.3);
+      margin: 15px;
       font-size: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      border: 3px solid transparent;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
     }
     
     .btn:hover {
       background: var(--secondary);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(67, 97, 238, 0.4);
+      border-color: rgba(255,255,255,0.3);
+    }
+    
+    .btn:active {
+      transform: translateY(-2px) scale(1.02);
     }
     
     .btn-secondary {
       background: var(--accent);
+      box-shadow: 0 8px 25px rgba(76, 201, 240, 0.3);
     }
     
     .btn-secondary:hover {
       background: #3aa8d0;
+      box-shadow: 0 15px 35px rgba(76, 201, 240, 0.4);
     }
     
     .btn-tertiary {
       background: var(--success);
+      box-shadow: 0 8px 25px rgba(75, 181, 67, 0.3);
     }
     
     .btn-tertiary:hover {
       background: #3d8a37;
+      box-shadow: 0 15px 35px rgba(75, 181, 67, 0.4);
+    }
+    
+    .btn-admin {
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+    }
+    
+    .btn-admin:hover {
+      background: linear-gradient(45deg, #ff5252, #ff7b7b);
+      box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
     }
     
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 30px;
       margin: 50px 0;
     }
     
     .feature-card {
       background: white;
-      border-radius: 15px;
-      padding: 30px;
+      border-radius: 20px;
+      padding: 40px 30px;
       text-align: center;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
     }
     
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      border-color: var(--primary);
     }
     
-    .feature-card i {
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .feature-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 25px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+    
+    .feature-card:hover .feature-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 15px 30px rgba(67, 97, 238, 0.3);
+    }
+    
+    .feature-icon i {
       font-size: 3rem;
-      color: var(--primary);
-      margin-bottom: 20px;
+      color: white;
     }
     
     .feature-card h3 {
       color: var(--secondary);
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
     }
     
     .feature-card p {
+      color: var(--gray);
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    
+    .feature-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 25px;
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .feature-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+    }
+    
+    .feature-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--light-gray);
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .stat-number {
+      transform: scale(1.1);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
       color: var(--gray);
     }
     
@@ -172,27 +305,56 @@
     
     .stat-card {
       background: white;
-      border-radius: 10px;
-      padding: 25px;
+      border-radius: 15px;
+      padding: 30px 25px;
       text-align: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border-left: 5px solid var(--primary);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
     }
     
     .stat-number {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 5px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover .stat-number {
+      transform: scale(1.1);
     }
     
     .stat-label {
       color: var(--gray);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .empty-stats {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 40px;
+      color: var(--gray);
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+    
+    .empty-stats i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: var(--light-gray);
     }
     
     footer {
       text-align: center;
-      padding: 30px;
+      padding: 40px 20px;
       margin-top: 50px;
       color: var(--gray);
       border-top: 1px solid var(--light-gray);
@@ -202,7 +364,124 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      margin: 40px 0;
+      margin: 50px 0;
+      gap: 15px;
+    }
+    
+    .admin-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 50px 0;
+      text-align: center;
+      color: white;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    }
+    
+    .admin-section h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+    
+    .admin-section p {
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+    
+    /* Animaciones */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    .feature-card {
+      animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .feature-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .feature-card:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    /* Efectos de partículas para botones */
+    .btn-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: particle 1s ease-out;
+    }
+    
+    @keyframes particle {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+      }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h2 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .btn {
+        padding: 15px 25px;
+        font-size: 1rem;
+        margin: 10px;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+      
+      .feature-card {
+        padding: 30px 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .action-buttons .btn {
+        width: 80%;
+        max-width: 300px;
+      }
     }
   </style>
 </head>
@@ -224,50 +503,100 @@
       <p>Una plataforma para facilitar el aprendizaje colaborativo entre estudiantes. Encuentra tutores para tus materias o comparte tu conocimiento ayudando a otros.</p>
       
       <div class="action-buttons">
-        <a href="registro.html" class="btn"><i class="fas fa-user-plus"></i> Registrarse</a>
-        <a href="tutores.html" class="btn btn-secondary"><i class="fas fa-search"></i> Buscar Tutores</a>
-        <a href="estadisticas.html" class="btn btn-tertiary"><i class="fas fa-chart-bar"></i> Ver Estadísticas</a>
+        <a href="registro.html" class="btn">
+          <i class="fas fa-user-plus"></i> Registrarse
+        </a>
+        <a href="tutores.html" class="btn btn-secondary">
+          <i class="fas fa-search"></i> Buscar Tutores
+        </a>
+        <a href="estadisticas.html" class="btn btn-tertiary">
+          <i class="fas fa-chart-bar"></i> Ver Estadísticas
+        </a>
       </div>
     </section>
 
     <section class="features">
+      <!-- Tarjeta 1: Aprendizaje Colaborativo -->
       <div class="feature-card">
-        <i class="fas fa-handshake"></i>
+        <div class="feature-icon">
+          <i class="fas fa-users"></i>
+        </div>
         <h3>Aprendizaje Colaborativo</h3>
-        <p>Conecta con otros estudiantes para aprender juntos y resolver dudas de manera colaborativa.</p>
+        <p>Conecta con otros estudiantes para aprender juntos, resolver dudas de manera colaborativa y formar grupos de estudio efectivos.</p>
+        <a href="tutores.html" class="feature-btn">
+          <i class="fas fa-search"></i> Encontrar Compañeros
+        </a>
+        <div class="feature-stats">
+          <div class="stat">
+            <span class="stat-number" id="grupos-reales">0</span>
+            <span class="stat-label">Grupos Formados</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="colaboraciones-reales">0</span>
+            <span class="stat-label">Colaboraciones</span>
+          </div>
+        </div>
       </div>
       
+      <!-- Tarjeta 2: Flexibilidad Horaria -->
       <div class="feature-card">
-        <i class="fas fa-clock"></i>
+        <div class="feature-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
         <h3>Flexibilidad Horaria</h3>
-        <p>Encuentra tutores disponibles en los horarios que mejor se adapten a tu rutina académica.</p>
+        <p>Encuentra tutores disponibles en los horarios que mejor se adapten a tu rutina académica, incluyendo fines de semana y horarios nocturnos.</p>
+        <a href="tutores.html" class="feature-btn">
+          <i class="fas fa-clock"></i> Ver Horarios
+        </a>
+        <div class="feature-stats">
+          <div class="stat">
+            <span class="stat-number" id="horarios-reales">0</span>
+            <span class="stat-label">Horarios Únicos</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="tutores-reales">0</span>
+            <span class="stat-label">Tutores Activos</span>
+          </div>
+        </div>
       </div>
       
+      <!-- Tarjeta 3: Múltiples Materias -->
       <div class="feature-card">
-        <i class="fas fa-book"></i>
+        <div class="feature-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
         <h3>Múltiples Materias</h3>
-        <p>Desde matemáticas hasta programación, encuentra ayuda en todas las materias que necesites.</p>
+        <p>Desde matemáticas y física hasta programación e idiomas. Encuentra ayuda especializada en todas las materias que necesites.</p>
+        <a href="tutores.html" class="feature-btn">
+          <i class="fas fa-book"></i> Explorar Materias
+        </a>
+        <div class="feature-stats">
+          <div class="stat">
+            <span class="stat-number" id="materias-reales">0</span>
+            <span class="stat-label">Materias Únicas</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number" id="especialistas-reales">0</span>
+            <span class="stat-label">Especialistas</span>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="stats-container" id="estadisticas">
-      <div class="stat-card">
-        <div class="stat-number" id="total-tutores">0</div>
-        <div class="stat-label">Tutores Registrados</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="total-estudiantes">0</div>
-        <div class="stat-label">Estudiantes Activos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="promedio-calificacion">0.0</div>
-        <div class="stat-label">Calificación Promedio</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="materias-disponibles">0</div>
-        <div class="stat-label">Materias Disponibles</div>
-      </div>
+      <!-- Las estadísticas se cargarán dinámicamente -->
     </section>
+
+    <!-- Sección de Administración (solo visible si hay registros) -->
+    <div id="admin-section" style="display: none;">
+      <div class="admin-section">
+        <h3><i class="fas fa-shield-alt"></i> Panel de Administración</h3>
+        <p>Acceso exclusivo para gestión de registros y datos del sistema</p>
+        <a href="admin.html" class="btn btn-admin">
+          <i class="fas fa-user-cog"></i> Acceder al Panel Admin
+        </a>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -278,14 +607,45 @@
   </footer>
 
   <script>
-    // Función para cargar y mostrar estadísticas
     function cargarEstadisticas() {
       const registros = JSON.parse(localStorage.getItem('tutoriasRegistros')) || [];
+      const container = document.getElementById('estadisticas');
+      const adminSection = document.getElementById('admin-section');
       
-      // Calcular estadísticas
+      // Mostrar sección de admin si hay registros
+      if (registros.length > 0) {
+        adminSection.style.display = 'block';
+      }
+      
+      // Calcular estadísticas REALES para las tarjetas de características
       const totalTutores = registros.filter(r => r.rol === 'tutor' || r.rol === 'ambos').length;
       const totalEstudiantes = registros.filter(r => r.rol === 'estudiante' || r.rol === 'ambos').length;
+      const materiasUnicas = [...new Set(registros.map(r => r.materia))].length;
+      const horariosUnicos = [...new Set(registros.map(r => r.disponibilidad))].length;
       
+      // Actualizar estadísticas en las tarjetas de características
+      document.getElementById('grupos-reales').textContent = Math.floor(totalEstudiantes / 3); // Estimación de grupos
+      document.getElementById('colaboraciones-reales').textContent = totalEstudiantes + totalTutores;
+      document.getElementById('horarios-reales').textContent = horariosUnicos;
+      document.getElementById('tutores-reales').textContent = totalTutores;
+      document.getElementById('materias-reales').textContent = materiasUnicas;
+      document.getElementById('especialistas-reales').textContent = totalTutores;
+      
+      if (registros.length === 0) {
+        container.innerHTML = `
+          <div class="empty-stats">
+            <i class="fas fa-chart-bar"></i>
+            <h3>No hay registros todavía</h3>
+            <p>Regístrate para ser el primero en nuestra plataforma</p>
+            <a href="registro.html" class="btn pulse" style="margin-top: 20px;">
+              <i class="fas fa-user-plus"></i> Ser el primero
+            </a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calcular estadísticas REALES para las tarjetas principales
       const calificaciones = registros
         .filter(r => r.calificacion)
         .map(r => parseInt(r.calificacion));
@@ -293,17 +653,94 @@
         ? (calificaciones.reduce((a, b) => a + b, 0) / calificaciones.length).toFixed(1)
         : '0.0';
       
-      const materiasUnicas = [...new Set(registros.map(r => r.materia))].length;
-      
-      // Actualizar la interfaz
-      document.getElementById('total-tutores').textContent = totalTutores;
-      document.getElementById('total-estudiantes').textContent = totalEstudiantes;
-      document.getElementById('promedio-calificacion').textContent = promedioCalificacion;
-      document.getElementById('materias-disponibles').textContent = materiasUnicas;
+      container.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-number">${registros.length}</div>
+          <div class="stat-label">Total Registrados</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${totalTutores}</div>
+          <div class="stat-label">Tutores Activos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${totalEstudiantes}</div>
+          <div class="stat-label">Estudiantes Activos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">${promedioCalificacion}</div>
+          <div class="stat-label">Calificación Promedio</div>
+        </div>
+      `;
     }
 
-    // Cargar estadísticas al iniciar la página
-    document.addEventListener('DOMContentLoaded', cargarEstadisticas);
+    // Efectos interactivos mejorados
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarEstadisticas();
+      
+      // Agregar efectos de partículas a los botones
+      const buttons = document.querySelectorAll('.btn');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          // Efecto de partículas
+          for (let i = 0; i < 8; i++) {
+            createParticle(e.clientX, e.clientY, button);
+          }
+        });
+        
+        // Efecto de hover mejorado
+        button.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-8px) scale(1.05)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+      
+      // Efectos para las tarjetas de características
+      const featureCards = document.querySelectorAll('.feature-card');
+      
+      featureCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-15px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+    });
+
+    // Función para crear partículas
+    function createParticle(x, y, button) {
+      const particle = document.createElement('div');
+      particle.className = 'btn-particle';
+      
+      // Posición relativa al botón
+      const rect = button.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Dirección aleatoria
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 50 + Math.random() * 50;
+      const xDir = Math.cos(angle) * distance;
+      const yDir = Math.sin(angle) * distance;
+      
+      particle.style.setProperty('--x', `${xDir}px`);
+      particle.style.setProperty('--y', `${yDir}px`);
+      particle.style.left = `${rect.width / 2}px`;
+      particle.style.top = `${rect.height / 2}px`;
+      
+      button.style.position = 'relative';
+      button.appendChild(particle);
+      
+      // Remover partícula después de la animación
+      setTimeout(() => {
+        particle.remove();
+      }, 1000);
+    }
   </script>
 </body>
 </html>

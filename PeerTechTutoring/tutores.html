@@ -199,6 +199,12 @@
       margin-bottom: 10px;
     }
     
+    .tutor-comentario {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 10px;
+    }
+    
     .tutor-contacto {
       margin-top: 15px;
       padding-top: 10px;
@@ -264,7 +270,7 @@
           <label for="filtro-materia">Filtrar por materia</label>
           <select id="filtro-materia">
             <option value="todas">Todas las materias</option>
-            <option value="matematicas">Matemáticas</option>
+            <option value="matematicas">Algebra</option>
             <option value="fisica">Física</option>
             <option value="quimica">Química</option>
             <option value="programacion">Programación</option>
@@ -299,7 +305,7 @@
       </div>
       
       <div class="tutores-container" id="lista-tutores">
-        <!-- Los tutores se cargarán aquí dinámicamente -->
+        <!-- Los tutores REALES se cargarán aquí dinámicamente -->
       </div>
     </section>
   </div>
@@ -312,14 +318,13 @@
   </footer>
 
   <script>
-    // Función para cargar y mostrar tutores
     function cargarTutores() {
       const registros = JSON.parse(localStorage.getItem('tutoriasRegistros')) || [];
       const filtroMateria = document.getElementById('filtro-materia').value;
       const filtroDisponibilidad = document.getElementById('filtro-disponibilidad').value;
       const filtroSemestre = document.getElementById('filtro-semestre').value;
       
-      // Filtrar tutores (rol tutor o ambos)
+      // Filtrar SOLO tutores REALES (rol tutor o ambos)
       let tutores = registros.filter(r => r.rol === 'tutor' || r.rol === 'ambos');
       
       // Aplicar filtros
@@ -350,15 +355,15 @@
               <div class="tutor-semestre">${tutor.semestre}</div>
             </div>
             <div class="tutor-info">
-              <span class="tutor-materia">${tutor.materia}</span>
+              <span class="tutor-materia">${tutor.materia.charAt(0).toUpperCase() + tutor.materia.slice(1)}</span>
             </div>
             <div class="tutor-disponibilidad">
               <i class="fas fa-clock"></i> ${obtenerTextoDisponibilidad(tutor.disponibilidad)}
             </div>
             <div class="tutor-comentario">${tutor.comentario || 'Sin comentarios adicionales'}</div>
             <div class="tutor-contacto">
-              <button class="contacto-btn" onclick="contactarTutor('${tutor.correo}')">
-                <i class="fas fa-envelope"></i> Contactar
+              <button class="contacto-btn" onclick="contactarTutor('${tutor.correo}', '${tutor.nombre}')">
+                <i class="fas fa-envelope"></i> Contactar a ${tutor.nombre.split(' ')[0]}
               </button>
             </div>
           `;
@@ -369,13 +374,18 @@
         contenedor.innerHTML = `
           <div class="empty-state">
             <i class="fas fa-user-graduate"></i>
-            <p>No se encontraron tutores con los filtros seleccionados.</p>
+            <h3>No hay tutores disponibles</h3>
+            <p>${registros.length === 0 ? 
+              'Aún no hay usuarios registrados. ¡Sé el primero!' : 
+              'No hay tutores que coincidan con los filtros seleccionados.'}</p>
+            ${registros.length === 0 ? 
+              '<a href="registro.html" class="btn" style="margin-top: 15px;"><i class="fas fa-user-plus"></i> Registrarse como Tutor</a>' : 
+              ''}
           </div>
         `;
       }
     }
     
-    // Función para obtener texto descriptivo de disponibilidad
     function obtenerTextoDisponibilidad(disponibilidad) {
       const textos = {
         'manana': 'Disponible en las mañanas',
@@ -387,12 +397,11 @@
       return textos[disponibilidad] || disponibilidad;
     }
     
-    // Función para contactar a un tutor
-    function contactarTutor(correo) {
-      alert(`Para contactar a este tutor, envía un correo a: ${correo}`);
+    function contactarTutor(correo, nombre) {
+      alert(`Para contactar a ${nombre}, envía un correo a:\n\n${correo}\n\n¡Recuerda presentarte y mencionar que vienes de PeerTech Tutorías!`);
     }
     
-    // Cargar tutores al iniciar la página y cuando cambien los filtros
+    // Cargar tutores al iniciar y cuando cambien los filtros
     document.addEventListener('DOMContentLoaded', cargarTutores);
     document.getElementById('filtro-materia').addEventListener('change', cargarTutores);
     document.getElementById('filtro-disponibilidad').addEventListener('change', cargarTutores);

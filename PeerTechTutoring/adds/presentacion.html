@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presentación - Resultados Tutorías PeerTech</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #4cc9f0;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4bb543;
+      --warning: #ffcc00;
+      --danger: #dc3545;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--dark);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    
+    .presentacion-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .diapositiva {
+      background: white;
+      border-radius: 20px;
+      padding: 50px;
+      margin: 30px 0;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      min-height: 600px;
+      display: none;
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    .diapositiva.activa {
+      display: block;
+    }
+    
+    .header-diapositiva {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid var(--primary);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .logo i {
+      font-size: 3rem;
+      color: var(--primary);
+    }
+    
+    .logo h1 {
+      font-size: 2.5rem;
+      color: var(--secondary);
+    }
+    
+    .contenido-diapositiva {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    
+    .texto-diapositiva {
+      padding: 20px;
+    }
+    
+    .grafica-diapositiva {
+      padding: 20px;
+      background: var(--light);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    h2 {
+      color: var(--secondary);
+      margin-bottom: 25px;
+      font-size: 2rem;
+    }
+    
+    h3 {
+      color: var(--primary);
+      margin: 25px 0 15px;
+      font-size: 1.5rem;
+    }
+    
+    p {
+      color: var(--gray);
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    
+    .metricas-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin: 30px 0;
+    }
+    
+    .metrica-card {
+      background: var(--light);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      border-left: 5px solid var(--primary);
+      transition: transform 0.3s ease;
+    }
+    
+    .metrica-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .metrica-valor {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    
+    .metrica-label {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+    
+    .conclusiones {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-top: 30px;
+    }
+    
+    .conclusiones h3 {
+      color: white;
+    }
+    
+    .conclusiones p {
+      color: rgba(255,255,255,0.9);
+    }
+    
+    .navegacion {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    
+    .btn-nav {
+      background: var(--primary);
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-nav:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+    
+    .btn-nav:disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .indicadores {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    
+    .indicador {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--light-gray);
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .indicador.activo {
+      background: var(--primary);
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    
+    .insight-box {
+      background: linear-gradient(135deg, #ffd166, #ff9e00);
+      color: var(--dark);
+      padding: 25px;
+      border-radius: 12px;
+      margin: 25px 0;
+      border-left: 5px solid #ff9e00;
+    }
+    
+    .insight-box h4 {
+      color: var(--dark);
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+    
+    @media (max-width: 968px) {
+      .contenido-diapositiva {
+        grid-template-columns: 1fr;
+      }
+      
+      .diapositiva {
+        padding: 30px 20px;
+      }
+      
+      .metricas-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="presentacion-container">
+    
+    <!-- Diapositiva 1: Resultados generales y objetivos -->
+    <div class="diapositiva activa" id="diapositiva1">
+      <div class="header-diapositiva">
+        <div class="logo">
+          <i class="fas fa-graduation-cap"></i>
+          <h1>Resultados Generales y Objetivos</h1>
+        </div>
+      </div>
+      
+      <div class="contenido-diapositiva">
+        <div class="texto-diapositiva">
+          <h2>📊 Objetivo del Proyecto</h2>
+          <p>Medir el interés real de los alumnos en recibir tutorías de otros estudiantes y validar la utilidad del sistema de aprendizaje colaborativo.</p>
+          
+          <h3>🎯 Métricas Principales Establecidas</h3>
+          <div class="metricas-grid">
+            <div class="metrica-card">
+              <div class="metrica-valor">65%</div>
+              <div class="metrica-label">Tasa de Conversión</div>
+              <p>Alumnos que se registraron después de conocer la plataforma</p>
+            </div>
+            <div class="metrica-card">
+              <div class="metrica-valor">67%</div>
+              <div class="metrica-label">Retención</div>
+              <p>Usuarios que regresaron para una segunda sesión</p>
+            </div>
+            <div class="metrica-card">
+              <div class="metrica-valor">85%</div>
+              <div class="metrica-label">Satisfacción</div>
+              <p>Usuarios satisfechos con la experiencia de tutoría</p>
+            </div>
+            <div class="metrica-card">
+              <div class="metrica-valor">80</div>
+              <div class="metrica-label">Alcance</div>
+              <p>Total de alumnos que conocieron la plataforma</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grafica-diapositiva">
+          <h3>📈 Embudo de Conversión</h3>
+          <div class="chart-container">
+            <canvas id="funnelChart"></canvas>
+          </div>
+          <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
+            <strong>Interpretación:</strong> Flujo de usuarios desde el descubrimiento hasta la retención
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Diapositiva 2: Análisis de métricas accionables -->
+    <div class="diapositiva" id="diapositiva2">
+      <div class="header-diapositiva">
+        <div class="logo">
+          <i class="fas fa-chart-line"></i>
+          <h1>Análisis de Métricas Accionables</h1>
+        </div>
+      </div>
+      
+      <div class="contenido-diapositiva">
+        <div class="texto-diapositiva">
+          <h2>📊 Comparativa: Esperado vs Real</h2>
+          
+          <div class="metricas-grid">
+            <div class="metrica-card">
+              <div class="metrica-valor">65%</div>
+              <div class="metrica-label">Conversión Real</div>
+              <p>vs 70% esperado</p>
+            </div>
+            <div class="metrica-card">
+              <div class="metrica-valor">67%</div>
+              <div class="metrica-label">Retención Real</div>
+              <p>vs 60% esperado</p>
+            </div>
+            <div class="metrica-card">
+              <div class="metrica-valor">85%</div>
+              <div class="metrica-label">Satisfacción Real</div>
+              <p>vs 80% esperado</p>
+            </div>
+          </div>
+          
+          <div class="insight-box">
+            <h4>💡 Insight Clave</h4>
+            <p><strong>El proyecto superó las expectativas en retención y satisfacción</strong>, demostrando que los usuarios valoran la experiencia más de lo anticipado.</p>
+          </div>
+          
+          <p><strong>Área de mejora identificada:</strong> La conversión está 5 puntos por debajo de lo esperado, indicando oportunidades en el proceso de registro.</p>
+        </div>
+        
+        <div class="grafica-diapositiva">
+          <h3>📊 Métricas vs Objetivos</h3>
+          <div class="chart-container">
+            <canvas id="comparisonChart"></canvas>
+          </div>
+          
+          <h3 style="margin-top: 30px;">🎯 Distribución de Satisfacción</h3>
+          <div class="chart-container">
+            <canvas id="satisfactionChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Diapositiva 3: Síntesis del aprendizaje validado -->
+    <div class="diapositiva" id="diapositiva3">
+      <div class="header-diapositiva">
+        <div class="logo">
+          <i class="fas fa-lightbulb"></i>
+          <h1>Síntesis del Aprendizaje Validado</h1>
+        </div>
+      </div>
+      
+      <div class="contenido-diapositiva">
+        <div class="texto-diapositiva">
+          <h2>🎯 Insight Principal Validado</h2>
+          
+          <div class="insight-box">
+            <h4>💡 "Los alumnos valoran más la empatía y claridad del tutor que la cantidad de temas vistos"</h4>
+          </div>
+          
+          <p>Este aprendizaje crucial demuestra que <strong>la calidad de la comunicación y la conexión personal</strong> son más importantes que la cobertura exhaustiva de contenido.</p>
+          
+          <h3>📋 Conclusiones Clave</h3>
+          <ul style="color: var(--gray); margin: 20px 0; padding-left: 20px; line-height: 1.8;">
+            <li>✅ La idea de tutorías entre pares es viable y útil</li>
+            <li>✅ La interfaz fue fácil de usar y generó confianza</li>
+            <li>✅ Los usuarios prefieren sesiones personalizadas</li>
+            <li>✅ La comunicación efectiva es clave para la satisfacción</li>
+          </ul>
+          
+          <h3>🚀 Recomendaciones para la Siguiente Versión</h3>
+          <ul style="color: var(--gray); margin: 20px 0; padding-left: 20px; line-height: 1.8;">
+            <li>➕ Añadir funciones de chat directo</li>
+            <li>➕ Implementar sistema de evaluación de tutores</li>
+            <li>➕ Simplificar el proceso de reserva de sesiones</li>
+            <li>➕ Incorporar perfiles detallados de tutores</li>
+          </ul>
+        </div>
+        
+        <div class="grafica-diapositiva">
+          <h3>📈 Funnel de Conversión Detallado</h3>
+          <div class="chart-container">
+            <canvas id="detailedFunnelChart"></canvas>
+          </div>
+          <p style="text-align: center; margin-top: 15px; font-size: 0.9rem;">
+            <strong>Análisis:</strong> Mayor caída entre registro y agendamiento → Oportunidad de mejora
+          </p>
+          
+          <div class="conclusiones">
+            <h3>✅ Validación Exitosa</h3>
+            <p>El proyecto demostró ser efectivo para conectar estudiantes y facilitar el aprendizaje colaborativo, con métricas que superaron las expectativas en retención y satisfacción.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Navegación -->
+    <div class="indicadores">
+      <div class="indicador activo" onclick="cambiarDiapositiva(0)"></div>
+      <div class="indicador" onclick="cambiarDiapositiva(1)"></div>
+      <div class="indicador" onclick="cambiarDiapositiva(2)"></div>
+    </div>
+    
+    <div class="navegacion">
+      <button class="btn-nav" onclick="diapositivaAnterior()" id="btnAnterior">
+        <i class="fas fa-arrow-left"></i> Anterior
+      </button>
+      <button class="btn-nav" onclick="diapositivaSiguiente()" id="btnSiguiente">
+        Siguiente <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let diapositivaActual = 0;
+    const totalDiapositivas = 3;
+    
+    function cambiarDiapositiva(n) {
+      // Ocultar diapositiva actual
+      document.getElementById(`diapositiva${diapositivaActual + 1}`).classList.remove('activa');
+      document.querySelectorAll('.indicador')[diapositivaActual].classList.remove('activo');
+      
+      // Mostrar nueva diapositiva
+      diapositivaActual = n;
+      document.getElementById(`diapositiva${diapositivaActual + 1}`).classList.add('activa');
+      document.querySelectorAll('.indicador')[diapositivaActual].classList.add('activo');
+      
+      // Actualizar estado de botones
+      actualizarBotones();
+    }
+    
+    function diapositivaSiguiente() {
+      if (diapositivaActual < totalDiapositivas - 1) {
+        cambiarDiapositiva(diapositivaActual + 1);
+      }
+    }
+    
+    function diapositivaAnterior() {
+      if (diapositivaActual > 0) {
+        cambiarDiapositiva(diapositivaActual - 1);
+      }
+    }
+    
+    function actualizarBotones() {
+      document.getElementById('btnAnterior').disabled = diapositivaActual === 0;
+      document.getElementById('btnSiguiente').disabled = diapositivaActual === totalDiapositivas - 1;
+    }
+    
+    // Inicializar gráficos cuando se cargue la página
+    document.addEventListener('DOMContentLoaded', function() {
+      inicializarGraficos();
+      actualizarBotones();
+      
+      // Navegación con teclado
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight') diapositivaSiguiente();
+        if (e.key === 'ArrowLeft') diapositivaAnterior();
+      });
+    });
+    
+    function inicializarGraficos() {
+      // Gráfico 1: Embudo de conversión
+      const funnelCtx = document.getElementById('funnelChart').getContext('2d');
+      new Chart(funnelCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Conocieron', 'Registrados', '1ra Sesión', '2da Sesión'],
+          datasets: [{
+            label: 'Número de Usuarios',
+            data: [80, 52, 45, 35],
+            backgroundColor: [
+              '#4361ee',
+              '#4cc9f0', 
+              '#3a0ca3',
+              '#7209b7'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          indexAxis: 'y',
+          plugins: {
+            legend: {
+              display: false
+            },
+            title: {
+              display: true,
+              text: 'Embudo de Conversión de Usuarios'
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+      
+      // Gráfico 2: Comparación esperado vs real
+      const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+      new Chart(comparisonCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Conversión', 'Retención', 'Satisfacción'],
+          datasets: [
+            {
+              label: 'Esperado',
+              data: [70, 60, 80],
+              backgroundColor: '#c3cfe2'
+            },
+            {
+              label: 'Real',
+              data: [65, 67, 85],
+              backgroundColor: '#4361ee'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Gráfico 3: Satisfacción del usuario
+      const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+      new Chart(satisfactionCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Muy Satisfechos', 'Satisfechos', 'Neutros', 'Insatisfechos'],
+          datasets: [{
+            data: [50, 35, 10, 5],
+            backgroundColor: [
+              '#4bb543',
+              '#8bc34a',
+              '#ffcc00',
+              '#ff6b6b'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+      
+      // Gráfico 4: Funnel detallado
+      const detailedFunnelCtx = document.getElementById('detailedFunnelChart').getContext('2d');
+      new Chart(detailedFunnelCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Visitas', 'Clics Registro', 'Formularios', 'Sesiones'],
+          datasets: [{
+            label: 'Número de Usuarios',
+            data: [100, 42, 18, 12],
+            backgroundColor: [
+              '#4361ee',
+              '#4cc9f0',
+              '#3a0ca3', 
+              '#7209b7'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
